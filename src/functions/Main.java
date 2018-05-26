@@ -2,7 +2,7 @@ package functions;
 
 public class Main {
 
-	public static double minutesRun =  30/60.0;
+	public static double minutesRun = 30/60.0;
 	
 	public static void main(String[] args) {
 		
@@ -25,7 +25,6 @@ public class Main {
 			}
 		}
 		
-		//Helpers.getHighScores();
 		Helpers.highScoreArrangements = Helpers.arrangementStdevFilter();
 		
 		double secsTotal = (System.currentTimeMillis() - startTime) / Math.pow(10, 3);
