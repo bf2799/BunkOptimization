@@ -8,8 +8,8 @@ import objects.Camper;
 
 public class GeneticAlgorithms {
 
-	public static final int initPopulationSize = 100;
-	public static final double keepPercent = 0.25;
+	public static final int initPopulationSize = 600;
+	public static final double KEEP_PERCENT = 0.1;
 	
 	public static ArrayList<Arrangement> initPopulation = new ArrayList<Arrangement>();
 	
@@ -296,9 +296,9 @@ public class GeneticAlgorithms {
 		
 		ArrayList<Arrangement> generation = new ArrayList<Arrangement>();
 		
-		for (int j = 0; j < (1 / keepPercent); j++) {
+		for (int j = 0; j < (1 / KEEP_PERCENT); j++) {
 		
-			ArrayList<Arrangement> subParents = SUS(initPopulation, (int) Math.round(keepPercent * initPopulation.size()));
+			ArrayList<Arrangement> subParents = SUS(initPopulation, (int) Math.round(KEEP_PERCENT * initPopulation.size()));
 			ArrayList<Arrangement> tempParents = new ArrayList<Arrangement>();
 			
 			while (subParents.size() > 0) {

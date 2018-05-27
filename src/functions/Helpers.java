@@ -140,7 +140,7 @@ public class Helpers {
 		
 		ArrayList<Arrangement> tempHighScoreArrangements = new ArrayList<Arrangement>();
 		
-		double lowStdev = 10000;
+		double lowStdev = Double.MAX_VALUE;
 		
 		for (int i = 0; i < highScoreArrangements.size(); i++) {
 			
