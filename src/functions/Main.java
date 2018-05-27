@@ -3,7 +3,7 @@ package functions;
 public class Main {
 
 	public static double minutesRun = 0 + 360/60.0;
-	public static int trials = 7;
+	public static int trials = 10;
 	
 	public static void main(String[] args) {
 		

@@ -18,6 +18,8 @@ public class GeneticAlgorithms {
 	
 	public static void initPopulation() {
 		
+		initPopulation.clear();
+		
 		while (initPopulation.size() < initPopulationSize) {
 			
 			//Generate random permutation
