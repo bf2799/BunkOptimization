@@ -1,5 +1,5 @@
 # BunkOptimization
-Takes neighbor and bunk preferences and finds optimal arrangement(s).
+Creates optimal bed arrangements in bunk/cabin for camps. Uses neighbor and bunk preferences of campers in evolutionary algorithm to estimate optimal solution.
 
 ## User Interface
     Sections in Bunk: (Enter int)
