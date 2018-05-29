@@ -1,10 +1,16 @@
 package functions;
 
+import java.util.ArrayList;
+
+import objects.Arrangement;
+
+
 public class Main {
 
-	public static double minutesRun = 0 + 360/60.0;
-	public static int trials = 10;
+	public static double minutesRun = 0 + 60/60.0;
+	public static int trials = 30;
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
 		Helpers.initCampers();
@@ -26,18 +32,22 @@ public class Main {
 				GeneticAlgorithms.createGen();
 				int secsRemaining = (int) Math.round(minutesRun * 60 - (System.currentTimeMillis() - startTime) / 1000);
 				if (secsRemaining != prevSecsRemaining) {
-					//Helpers.timeOutput(secsRemaining);
+					if (trials == 1) {
+						Helpers.timeOutput(secsRemaining);
+					}
 					prevSecsRemaining = secsRemaining;
 				}
 			}
 			
-			Helpers.highScoreArrangements = Helpers.arrangementStdevFilter();
+			Helpers.highScoreArrangements = (ArrayList<Arrangement>) Helpers.arrangementStdevFilter().clone();
 			
 			double secsTotal = (System.currentTimeMillis() - startTime) / Math.pow(10, 3);
 			
 			Helpers.printFormat(secsTotal);
 			
-			System.out.println("Trial " + i + " complete");
+			if (trials > 1) {
+				System.out.println("Trial " + i + " complete");
+			}
 		}
 
 	}

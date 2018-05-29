@@ -292,7 +292,8 @@ public class Helpers {
 			sumOfSquares += Math.pow(pointsArray.get(i) - mean, 2);
 		}
 		
-		if (stdevBool) return Math.pow(sumOfSquares, 0.5);
+		if (stdevBool) 
+			return Math.pow(sumOfSquares, 0.5);
 		
 		return 0;
 	}
@@ -342,13 +343,18 @@ public class Helpers {
 	
 	public static void printFormat(double secsTotal) {
 		
-		for (int j = 0; j < highScoreArrangements.size(); j++) {
-			System.out.println();
-			System.out.println("Optimal Arrangement " + (j + 1));
-			System.out.println(calcPoints(highScoreArrangements.get(j)));
-			for (int i = 0; i < highScoreArrangements.get(j).getLength(); i++) {
-				System.out.println(highScoreArrangements.get(j).getCamper(i).getName());
+		if (Main.trials == 1) {
+			for (int j = 0; j < highScoreArrangements.size(); j++) {
+				System.out.println();
+				System.out.println("Optimal Arrangement " + (j + 1));
+				System.out.println(calcPoints(highScoreArrangements.get(j)));
+				for (int i = 0; i < highScoreArrangements.get(j).getLength(); i++) {
+					System.out.println(highScoreArrangements.get(j).getCamper(i).getName());
+				}
 			}
+		} else {
+			System.out.println();
+			System.out.println(calcPoints(highScoreArrangements.get(0)));
 		}
 		
 		System.out.println("Total Time");
