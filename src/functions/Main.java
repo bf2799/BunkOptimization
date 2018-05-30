@@ -25,7 +25,9 @@ public class Main {
 			
 			int prevSecsRemaining = 0;
 			
-			while ((System.currentTimeMillis() - startTime) / 1000 < minutesRun * 60 * loops) {
+			double tempStartTime = System.currentTimeMillis();
+			
+			while ((System.currentTimeMillis() - tempStartTime) / 1000 < minutesRun * 60) {
 				GeneticAlgorithms.createGen();
 				int secsRemaining = (int) Math.round(minutesRun * 60 * loops - (System.currentTimeMillis() - startTime) / 1000);
 				if (secsRemaining != prevSecsRemaining) {
