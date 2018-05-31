@@ -24,9 +24,8 @@ public class Helpers {
 	public static final double BUNK_BUDDY_ADDITION = 1;
 	public static final double SIDE_ADDITION = 1;
 	public static final double DIAGONAL_ADDITION = 0.5;
-	public static final int TIME_DISPLAY_PERIOD = 1000000;
 	
-	public static final String FILE = "/Users/Benjamin/PyCharmProjects/BunkAssignments/StatsClass.csv";
+	public static final String FILE = "/Users/Benjamin/PyCharmProjects/BunkAssignments/BunkTest.csv";
 	public static final String DELIMITER = ",";
 	
 	public static void initCampers() {

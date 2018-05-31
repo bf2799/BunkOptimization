@@ -18,16 +18,15 @@ public class Main {
 		Helpers.setAllowedBunkConfigs();
 		
 		double startTime = System.currentTimeMillis();
+		int prevSecsRemaining = 0;
 		
 		for (int i = 1; i <= loops; i++) {
 			
 			GeneticAlgorithms.initPopulation();
 			
-			int prevSecsRemaining = 0;
-			
 			double tempStartTime = System.currentTimeMillis();
 			
-			while ((System.currentTimeMillis() - tempStartTime) / 1000 < minutesRun * 60) {
+			while ((System.currentTimeMillis() - tempStartTime) / 1000 < minutesRun * 60 && (minutesRun * 60 * loops - (System.currentTimeMillis() - startTime) / 1000) > 0) {
 				GeneticAlgorithms.createGen();
 				int secsRemaining = (int) Math.round(minutesRun * 60 * loops - (System.currentTimeMillis() - startTime) / 1000);
 				if (secsRemaining != prevSecsRemaining) {
