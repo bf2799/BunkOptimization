@@ -43,10 +43,20 @@ public class Helpers {
 		PrintFiles pf = new PrintFiles();
 		Files.walkFileTree(directory, pf);
 		
-		System.out.print("Choose file number: ");
-		Scanner reader = new Scanner(System.in);
-		fileNumber = reader.nextInt();
-		reader.close();
+		boolean doesFileIndexExist = false;
+		
+		while (!doesFileIndexExist) {
+			System.out.print("Choose file number: ");
+			Scanner reader = new Scanner(System.in);
+			fileNumber = reader.nextInt();
+			reader.close();
+			
+			if (fileNumber < PrintFiles.files.size()) {
+				doesFileIndexExist = true;
+			} else {
+				System.out.println("Not a valid number. Please try again.");
+			}
+		}
 	}
 	
 	/**
@@ -112,15 +122,28 @@ public class Helpers {
 		Scanner reader = new Scanner(System.in);
 		int numSections, numBotBunks, numTopBunks;
 		
-		System.out.print("Sections in Bunk: ");
-		numSections = reader.nextInt();
+		int totalBunksEntered = 0;
 		
-		for (int i = 1; i < numSections + 1; i++) {
-			System.out.print("Bottom bunks in section " + i + ": ");
-			numBotBunks = reader.nextInt();
-			System.out.print("Top bunks in section " + i + ": ");
-			numTopBunks = reader.nextInt();
-			Section.sections.add(new Section(numBotBunks, numTopBunks));
+		while (totalBunksEntered != Camper.campers.size()) {
+			
+			totalBunksEntered = 0;
+			
+			System.out.print("Sections in Bunk: ");
+			numSections = reader.nextInt();
+			
+			for (int i = 1; i < numSections + 1; i++) {
+				
+				System.out.print("Bottom bunks in section " + i + ": ");
+				numBotBunks = reader.nextInt();
+				System.out.print("Top bunks in section " + i + ": ");
+				numTopBunks = reader.nextInt();
+				Section.sections.add(new Section(numBotBunks, numTopBunks));
+				totalBunksEntered += numBotBunks + numTopBunks;
+			}
+			
+			if (totalBunksEntered != Camper.campers.size()) {
+				System.out.println("Number of campers incorrect. Please try again.");
+			}
 		}
 		
 		reader.close();
