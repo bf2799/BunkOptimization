@@ -34,8 +34,7 @@ public class GeneticAlgorithms {
 				subArrangement.remove(index);
 			}
 			
-			//if (!Helpers.bunkHeightWrong(new Arrangement(tempArrangement)))
-				initPopulation.add(new Arrangement(tempArrangement));
+			initPopulation.add(new Arrangement(tempArrangement));
 		}
 		
 	}

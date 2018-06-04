@@ -3,6 +3,10 @@ package functions;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,24 +23,45 @@ public class Helpers {
 	public static int botBunkOnlyThreshold = 0;
 	public static int topBunkOnlyThreshold = 0;
 	public static double highScore = -Double.MAX_VALUE;
+	public static int fileNumber = 0;
 	
 	public static final double BUNK_LEVEL_ADDITION = 10;
 	public static final double BUNK_BUDDY_ADDITION = 1;
 	public static final double SIDE_ADDITION = 1;
 	public static final double DIAGONAL_ADDITION = 0.5;
 	
-	public static final String FILE = "/Users/Benjamin/PyCharmProjects/BunkAssignments/BunkTest.csv";
+	public static final String FILE_PATH = "/Users/Benjamin/PyCharmProjects/BunkAssignments";
 	public static final String DELIMITER = ",";
 	
-	public static void initCampers() {
+	/**
+	 * Gets file to read from
+	 * @throws IOException
+	 */
+	public static void initFile() throws IOException {
+		
+		Path directory = Paths.get(URI.create("file://" + FILE_PATH));
+		PrintFiles pf = new PrintFiles();
+		Files.walkFileTree(directory, pf);
+		
+		System.out.print("Choose file number: ");
+		Scanner reader = new Scanner(System.in);
+		fileNumber = reader.nextInt();
+		reader.close();
+	}
 	
+	/**
+	 * Creates list of campers and attributes from file
+	 */
+	public static void initCampers() {
+		
 		boolean doneReading = false;
 		
 		BufferedReader br = null;
 		
 		try {
 			
-			br = new BufferedReader(new FileReader(FILE));
+			//Minus 1 exists because file number is one more than index in array list
+			br = new BufferedReader(new FileReader(PrintFiles.files.get(fileNumber - 1).toString()));
 			
 			br.readLine();
 			
@@ -79,6 +104,9 @@ public class Helpers {
 	}
 	
 	
+	/**
+	 * Creates right number of sections and bunks in each with user input
+	 */
 	public static void initSections() {
 		
 		Scanner reader = new Scanner(System.in);
@@ -99,6 +127,14 @@ public class Helpers {
 	}
 
 	
+	/**
+	 * Checks to see if the bunk height is wrong
+	 * @param arrangement
+	 * 			The arrangement to check
+	 * @return
+	 * 			true: The bunk height is not allowed
+	 * 			false: The bunk height is allowed
+	 */
 	public static boolean bunkHeightWrong(Arrangement arrangement) {
 		
 		boolean wrong = false;
@@ -135,6 +171,11 @@ public class Helpers {
 	}
 
 	
+	/**
+	 * Keeps the lowest standard deviation of the high scores
+	 * @return
+	 * 		The new list of low standard deviation high scores
+	 */
 	public static ArrayList<Arrangement> arrangementStdevFilter() {
 		
 		ArrayList<Arrangement> tempHighScoreArrangements = new ArrayList<Arrangement>();
@@ -160,16 +201,42 @@ public class Helpers {
 	}
 	
 	
+	/**
+	 * Calculates the number of points of the arrangement
+	 * @param arrangement
+	 * 			The arrangement to calculate
+	 * @return
+	 * 			The number of points of that arrangement
+	 */
 	public static double calcPoints(Arrangement arrangement) {
 		return calcArrangement(arrangement, true, false);
 	}
 	
 	
+	/**
+	 * Calculates the standard deviation of the arrangement 
+	 * @param arrangement
+	 * 			The arrangement to calculate
+	 * @return
+	 * 			The standard deviation of that arrangement
+	 */
 	public static double calcStdev(Arrangement arrangement) {
 		return calcArrangement(arrangement, false, true);
 	}
 	
 	
+	/**
+	 * Actually performs the calculations of points for each camper
+	 * @param arrangement
+	 * 			The arrangement to calculate
+	 * @param pointsBool
+	 * 			true: Points should be calculated
+	 * 			false: Points should not be calculated
+	 * @param stdevBool
+	 * 			true: Standard deviation should be calculated
+	 * 			false: Standard deviation should not be calculated
+	 * @return
+	 */
 	public static double calcArrangement(Arrangement arrangement, boolean pointsBool, boolean stdevBool) {
 		
 		//Assign sections
@@ -298,6 +365,11 @@ public class Helpers {
 	}
 	
 	
+	/**
+	 * Outputs time in HH:MM:SS notation
+	 * @param secs
+	 * 			The number of seconds to format
+	 */
 	public static void timeOutput(double secs) {
 		
 		int formatSecs = (int) Math.round(secs);
@@ -309,6 +381,10 @@ public class Helpers {
 	}
 
 	
+	/**
+	 * Sets the allowed wrong top and bottom bunks for the particular data set
+	 * Used for seeing if bunk height is wrong
+	 */
 	public static void setAllowedBunkConfigs() {
 		
 		//Get number of allowed bunks
@@ -340,6 +416,11 @@ public class Helpers {
 	}
 	
 	
+	/**
+	 * Prints out the most optimal arrangements and total seconds in readable way
+	 * @param secsTotal
+	 * 			The number of seconds the whole program took
+	 */
 	public static void printFormat(double secsTotal) {
 		
 		if (Main.trials == 1) {
