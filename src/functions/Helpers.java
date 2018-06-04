@@ -33,6 +33,8 @@ public class Helpers {
 	public static final String FILE_PATH = "/Users/Benjamin/PyCharmProjects/BunkAssignments";
 	public static final String DELIMITER = ",";
 	
+	private static final Scanner reader = new Scanner(System.in);
+	
 	/**
 	 * Gets file to read from
 	 * @throws IOException
@@ -47,11 +49,9 @@ public class Helpers {
 		
 		while (!doesFileIndexExist) {
 			System.out.print("Choose file number: ");
-			Scanner reader = new Scanner(System.in);
 			fileNumber = reader.nextInt();
-			reader.close();
 			
-			if (fileNumber < PrintFiles.files.size()) {
+			if (fileNumber < PrintFiles.files.size() && fileNumber > 0) {
 				doesFileIndexExist = true;
 			} else {
 				System.out.println("Not a valid number. Please try again.");
@@ -79,7 +79,7 @@ public class Helpers {
 				
 				String[] line = br.readLine().split(DELIMITER);
 				
-				if (line.length < 5) {
+				if (line.length < 2) {
 					doneReading = true;
 				} else {
 
@@ -119,13 +119,14 @@ public class Helpers {
 	 */
 	public static void initSections() {
 		
-		Scanner reader = new Scanner(System.in);
 		int numSections, numBotBunks, numTopBunks;
 		
 		int totalBunksEntered = 0;
+		boolean bunkDifferenceAllowed = true;
 		
-		while (totalBunksEntered != Camper.campers.size()) {
+		while (totalBunksEntered != Camper.campers.size() || !bunkDifferenceAllowed) {
 			
+			bunkDifferenceAllowed = true;
 			totalBunksEntered = 0;
 			
 			System.out.print("Sections in Bunk: ");
@@ -139,14 +140,16 @@ public class Helpers {
 				numTopBunks = reader.nextInt();
 				Section.sections.add(new Section(numBotBunks, numTopBunks));
 				totalBunksEntered += numBotBunks + numTopBunks;
+				if (!(numBotBunks - numTopBunks == 0 || numBotBunks - numTopBunks == 1)) {
+					bunkDifferenceAllowed = false;
+				}
 			}
 			
 			if (totalBunksEntered != Camper.campers.size()) {
 				System.out.println("Number of campers incorrect. Please try again.");
 			}
+			
 		}
-		
-		reader.close();
 	}
 
 	

@@ -17,9 +17,11 @@ public class PrintFiles extends SimpleFileVisitor<Path>{
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
 		
-		System.out.println("(" + Integer.toString(counter) + ") " + file);
-		counter++;
-		files.add(file);
+		if (file.toString().endsWith(".csv")) {
+			System.out.println("(" + Integer.toString(counter) + ") " + file.getFileName());
+			counter++;
+			files.add(file);
+		}
 		
 		return CONTINUE; 
 	}

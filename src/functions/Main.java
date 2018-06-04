@@ -1,5 +1,6 @@
 package functions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import objects.Arrangement;
@@ -12,8 +13,9 @@ public class Main {
 	public static int loops = 1;
 	
 	@SuppressWarnings("unchecked")
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
+		Helpers.initFile();
 		Helpers.initCampers();
 		Helpers.initSections();
 		Helpers.setAllowedBunkConfigs();
