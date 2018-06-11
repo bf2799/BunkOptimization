@@ -1,6 +1,5 @@
 package functions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import objects.Arrangement;
@@ -16,10 +15,10 @@ import objects.Arrangement;
 public class Main {
 
 	public static int trials = 1;
-	public static int loops = 30;
-	public static final int GEN_PER_LOOP = 360;
+	public static int loops = 0;
+	public static final int GEN_PER_LOOP = 400;
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		
 		Helpers.initFile();
 		
@@ -30,6 +29,7 @@ public class Main {
 		
 		Helpers.initCampers();
 		Helpers.initSections();
+		Helpers.initLoops();
 		Helpers.setAllowedBunkConfigs();
 		
 		for (int j = 0; j < trials; j++) {

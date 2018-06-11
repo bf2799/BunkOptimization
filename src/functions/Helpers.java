@@ -7,10 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -41,7 +37,6 @@ public class Helpers {
 	public static final double SIDE_ADDITION = 1;
 	public static final double DIAGONAL_ADDITION = 0.5;
 	
-	public static final String FILE_PATH = "/Users/Benjamin/PyCharmProjects/BunkAssignments";
 	public static final String DELIMITER = ",";
 	
 	private static final Scanner reader = new Scanner(System.in);
@@ -52,7 +47,7 @@ public class Helpers {
 	 * Gets file to read from
 	 * @throws IOException
 	 */
-	public static void initFile() throws IOException {
+	public static void initFile() {
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);
@@ -149,14 +144,14 @@ public class Helpers {
 			totalBunksEntered = 0;
 			
 			System.out.print("Sections in Bunk: ");
-			numSections = reader.nextInt();
+			numSections = (int) reader.nextDouble();
 			
 			for (int i = 1; i < numSections + 1; i++) {
 				
 				System.out.print("Bottom bunks in section " + i + ": ");
-				numBotBunks = reader.nextInt();
+				numBotBunks = (int) reader.nextDouble();
 				System.out.print("Top bunks in section " + i + ": ");
-				numTopBunks = reader.nextInt();
+				numTopBunks = (int) reader.nextDouble();
 				Section.sections.add(new Section(numBotBunks, numTopBunks));
 				totalBunksEntered += numBotBunks + numTopBunks;
 				if (!(numBotBunks - numTopBunks == 0 || numBotBunks - numTopBunks == 1)) {
@@ -171,6 +166,14 @@ public class Helpers {
 		}
 	}
 
+	
+	public static void initLoops() {
+		
+		System.out.print("Approximate minutes to run: ");
+		int mins = (int) reader.nextDouble();
+		Main.loops = (int) (mins / 2.0);
+	}
+	
 	
 	/**
 	 * Checks to see if the bunk height is wrong
