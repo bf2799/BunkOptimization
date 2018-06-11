@@ -8,6 +8,7 @@ import objects.Arrangement;
 /*
  * TODO List
  * Make runnable out of environment
+ * Add choices for how much to run
  * Seed initial population by making bottoms from bottom allowed only and top from top allowed only
  * Find way to run program in user-friendly way
  */
@@ -15,13 +16,18 @@ import objects.Arrangement;
 public class Main {
 
 	public static int trials = 1;
-	public static int loops = 2;
+	public static int loops = 30;
 	public static final int GEN_PER_LOOP = 360;
 	
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		
 		Helpers.initFile();
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void fileSelectedAction() {
+		
 		Helpers.initCampers();
 		Helpers.initSections();
 		Helpers.setAllowedBunkConfigs();

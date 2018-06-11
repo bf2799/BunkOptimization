@@ -1,6 +1,10 @@
 package functions;
 
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -9,6 +13,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 import objects.Arrangement;
 import objects.Camper;
@@ -37,28 +46,35 @@ public class Helpers {
 	
 	private static final Scanner reader = new Scanner(System.in);
 	
+	private static File file;
+	
 	/**
 	 * Gets file to read from
 	 * @throws IOException
 	 */
 	public static void initFile() throws IOException {
 		
-		Path directory = Paths.get(URI.create("file://" + FILE_PATH));
-		PrintFiles pf = new PrintFiles();
-		Files.walkFileTree(directory, pf);
-		
-		boolean doesFileIndexExist = false;
-		
-		while (!doesFileIndexExist) {
-			System.out.print("Choose file number: ");
-			fileNumber = reader.nextInt();
-			
-			if (fileNumber < PrintFiles.files.size() && fileNumber > 0) {
-				doesFileIndexExist = true;
-			} else {
-				System.out.println("Not a valid number. Please try again.");
-			}
-		}
+		JFrame.setDefaultLookAndFeelDecorated(true);
+	    JDialog.setDefaultLookAndFeelDecorated(true);
+	    JFrame frame = new JFrame("JComboBox Test");
+	    frame.setLayout(new FlowLayout());
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    JButton button = new JButton("Select File");
+	    button.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent ae) {
+	    		JFileChooser fileChooser = new JFileChooser();
+	    		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    		int returnValue = fileChooser.showOpenDialog(null);
+	    		if (returnValue == JFileChooser.APPROVE_OPTION) {
+	    			file = fileChooser.getSelectedFile();
+	    		}
+	    		frame.dispose();
+	    		Main.fileSelectedAction();
+	    	}
+	    });
+	    frame.add(button);
+	    frame.pack();
+	    frame.setVisible(true);
 	}
 	
 	/**
@@ -73,7 +89,8 @@ public class Helpers {
 		try {
 			
 			//Minus 1 exists because file number is one more than index in array list
-			br = new BufferedReader(new FileReader(PrintFiles.files.get(fileNumber - 1).toString()));
+			br = new BufferedReader(new FileReader(file));
+			//br = new BufferedReader(new FileReader(PrintFiles.files.get(fileNumber - 1).toString()));
 			
 			br.readLine();
 			
