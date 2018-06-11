@@ -169,9 +169,8 @@ public class Helpers {
 	
 	public static void initLoops() {
 		
-		System.out.print("Approximate minutes to run: ");
-		int mins = (int) reader.nextDouble();
-		Main.loops = (int) (mins / 2.0);
+		System.out.print("Loops to run (~ 2 minutes each): ");
+		Main.loops = (int) reader.nextDouble();
 	}
 	
 	
