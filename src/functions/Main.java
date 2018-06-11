@@ -5,12 +5,19 @@ import java.util.ArrayList;
 
 import objects.Arrangement;
 
+/*
+ * TODO List
+ * Make runnable out of environment
+ * Format output in more comprehensible way
+ * Seed initial population by making bottoms from bottom allowed only and top from top allowed only
+ * Find way to run program in user-friendly way
+ */
 
 public class Main {
 
-	public static int trials = 50;
-	public static double minutesRunPerLoop = 3;
+	public static int trials = 1;
 	public static int loops = 1;
+	public static final int GEN_PER_LOOP = 360;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
@@ -29,16 +36,16 @@ public class Main {
 				
 				GeneticAlgorithms.initPopulation();
 				
-				double tempStartTime = System.currentTimeMillis();
-				
-				while ((System.currentTimeMillis() - tempStartTime) / 1000 < minutesRunPerLoop * 60 && (minutesRunPerLoop * 60 * loops - (System.currentTimeMillis() - startTime) / 1000) > 0) {
+				for (int gensComplete = 0; gensComplete < GEN_PER_LOOP; gensComplete++) {
 					GeneticAlgorithms.createGen();
-					int secsRemaining = (int) Math.round(minutesRunPerLoop * 60 * loops - (System.currentTimeMillis() - startTime) / 1000);
+					int secsRemaining = (int) Math.round((double) (GEN_PER_LOOP * loops) / (gensComplete + (i - 1) * GEN_PER_LOOP) * (System.currentTimeMillis() - startTime) / 1000.0 - (System.currentTimeMillis() - startTime) / 1000.0);
 					if (secsRemaining != prevSecsRemaining) {
-						if (trials == 1)
+						if (trials == 1) {
 							Helpers.timeOutput(secsRemaining);
+						}
 						prevSecsRemaining = secsRemaining;
 					}
+					gensComplete++;
 				}
 			}
 			
