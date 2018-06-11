@@ -169,7 +169,10 @@ public class Helpers {
 	
 	public static void initLoops() {
 		
-		System.out.print("Loops to run (~ 2 minutes each): ");
+		System.out.println("Loops to run");
+		System.out.println("~2 minutes each");
+		System.out.println("~30 loops maximizes return on time, more is better");
+		System.out.print("Choose: ");
 		Main.loops = (int) reader.nextDouble();
 	}
 	
