@@ -25,6 +25,8 @@ public class Helpers {
 	public static double highScore = -Double.MAX_VALUE;
 	public static int fileNumber = 0;
 	
+	public static final int FORMAT_NAME_LENGTH = 25;
+	
 	public static final double BUNK_LEVEL_ADDITION = 10;
 	public static final double BUNK_BUDDY_ADDITION = 1;
 	public static final double SIDE_ADDITION = 1;
@@ -454,9 +456,33 @@ public class Helpers {
 				System.out.println();
 				System.out.println("Optimal Arrangement " + (j + 1));
 				System.out.println(calcPoints(highScoreArrangements.get(j)));
-				for (int i = 0; i < highScoreArrangements.get(j).getLength(); i++) {
-					System.out.println(highScoreArrangements.get(j).getCamper(i).getName());
+				System.out.println();
+				
+				int camperIndex = 0;
+				for (Section s : Section.sections) {
+					String tempTopString = "";
+					String tempBotString = "";
+					for (int camper = 0; camper < s.getNumBotBunks(); camper++) {
+						String camperName = highScoreArrangements.get(j).getCamper(camperIndex).getName();
+						tempBotString += camperName;
+						for (int chars = camperName.length(); chars < FORMAT_NAME_LENGTH; chars++) {
+							tempBotString += " ";
+						}
+						camperIndex++;
+					}
+					for (int camper = 0; camper < s.getNumTopBunks(); camper++) {
+						String camperName = highScoreArrangements.get(j).getCamper(camperIndex).getName();
+						tempTopString += camperName;
+						for (int chars = camperName.length(); chars < FORMAT_NAME_LENGTH; chars++) {
+							tempTopString += " ";
+						}
+						camperIndex++;
+					}
+					System.out.println(tempTopString);
+					System.out.println(tempBotString);
+					System.out.println();
 				}
+				
 			}
 			
 			System.out.println("Total Time");
