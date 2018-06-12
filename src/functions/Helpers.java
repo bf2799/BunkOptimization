@@ -261,56 +261,6 @@ public class Helpers {
 	
 	
 	/**
-	 * Creates right number of sections and bunks in each with user input
-	 */
-	public static void initSections() {
-		
-		int numSections, numBotBunks, numTopBunks;
-		
-		int totalBunksEntered = 0;
-		boolean bunkDifferenceAllowed = true;
-		
-		
-		while (totalBunksEntered != Camper.campers.size() || !bunkDifferenceAllowed) {
-			
-			bunkDifferenceAllowed = true;
-			totalBunksEntered = 0;
-			
-			System.out.print("Sections in Bunk: ");
-			numSections = (int) reader.nextDouble();
-			
-			for (int i = 1; i < numSections + 1; i++) {
-				
-				System.out.print("Bottom bunks in section " + i + ": ");
-				numBotBunks = (int) reader.nextDouble();
-				System.out.print("Top bunks in section " + i + ": ");
-				numTopBunks = (int) reader.nextDouble();
-				Section.sections.add(new Section(numBotBunks, numTopBunks));
-				totalBunksEntered += numBotBunks + numTopBunks;
-				if (!(numBotBunks - numTopBunks == 0 || numBotBunks - numTopBunks == 1)) {
-					bunkDifferenceAllowed = false;
-				}
-			}
-			
-			if (totalBunksEntered != Camper.campers.size()) {
-				System.out.println("Number of campers incorrect. Please try again.");
-			}
-			
-		}
-	}
-
-	
-	public static void initLoops() {
-		
-		System.out.println("Loops to run");
-		System.out.println("~2 minutes each");
-		System.out.println("~30 loops maximizes return on time, more is better");
-		System.out.print("Choose: ");
-		Main.loops = (int) reader.nextDouble();
-	}
-	
-	
-	/**
 	 * Checks to see if the bunk height is wrong
 	 * @param arrangement
 	 * 			The arrangement to check
