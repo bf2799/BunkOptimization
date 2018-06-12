@@ -8,7 +8,7 @@ import objects.Camper;
 
 public class GeneticAlgorithms {
 
-	public static final int initPopulationSize = 400;
+	public static final int initPopulationSize = 420;
 	public static final double KEEP_PERCENT = 0.1;
 	
 	public static ArrayList<Arrangement> initPopulation = new ArrayList<Arrangement>();

@@ -1,8 +1,5 @@
 package functions;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -54,7 +49,7 @@ public class Helpers {
 	
 	private final static int INT_TEXT_FIELD_WIDTH = 3;
 	
-	public static void manageGUI() {
+	public static void manageUserInput() {
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);
@@ -62,26 +57,98 @@ public class Helpers {
 	    frame.setLayout(new GridLayout(1, 3, 10, 10));
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
+	    ArrayList<JTextField> textFields = new ArrayList<JTextField>();
+	    
+	    JButton selectFileButton = new JButton("Select File");
+	    JButton sectionEnterButton = new JButton("Enter");
+	    
 	    JLabel sectionLabel = new JLabel("Sections in Bunk");
 	    JTextField sectionField = new JTextField(INT_TEXT_FIELD_WIDTH);
 	    
+	    JLabel loopLabel1 = new JLabel("  Enter # of loops to run");
+	    JLabel loopLabel2 = new JLabel("  ~2 minutes each");
+	    JLabel loopLabel3 = new JLabel("  ~30 loops maximizes return on time");
+	    JLabel loopLabel4 = new JLabel("  More is better");
+	    JTextField loopField = new JTextField(INT_TEXT_FIELD_WIDTH);
+	    
+	    //Init loops
+	    JButton loopEnterButton = new JButton("Enter");
+	    loopEnterButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent ae) {
+	    		Main.loops = Integer.parseInt(loopField.getText());
+	    		Main.userInputComplete();
+	    	}
+	    });
+	    
+	    //Init bunk numbers
 	    JButton bunkNumberEnterButton = new JButton("Enter");
 	    bunkNumberEnterButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 	    		
+	    		//Ensures bottom is 1 or 0 more than top and that total entered is correct
+	    		int totalBunksEntered = 0;
+	    		boolean bunkDifferenceAllowed = true;
+	    		boolean botBunk = true;
+	    		int prev = 0;
+	    		for (JTextField num : textFields) {
+	    			totalBunksEntered += Integer.parseInt(num.getText());
+	    			if (!botBunk) {
+	    				if (!(prev - Integer.parseInt(num.getText()) == 0 || prev - Integer.parseInt(num.getText()) == 1)) {
+	    					bunkDifferenceAllowed = false;
+	    				}
+	    			} else {
+	    				prev = Integer.parseInt(num.getText());
+	    			}
+	    			botBunk = !botBunk;
+	    		}
+	    		
+	    		//Enforces enter rules
+	    		if (totalBunksEntered == Camper.campers.size() && bunkDifferenceAllowed) {
+	    			
+	    			//Assign right numbers to each section
+	    			for (int i = 0; i < textFields.size(); i += 2) {
+						Section.sections.add(new Section(Integer.parseInt(textFields.get(i).getText()),
+								Integer.parseInt(textFields.get(i + 1).getText())));
+	    			}
+	    			
+	    			frame.dispose();
+	    			frame = new JFrame("Bunk Optimization");
+	    		    frame.setLayout(new GridLayout(6, 1, 10, 10));
+	    		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    			frame.add(loopLabel1);
+	    			frame.add(loopLabel2);
+	    			frame.add(loopLabel3);
+	    			frame.add(loopLabel4);
+	    			frame.add(loopField);
+	    			frame.add(loopEnterButton);
+	    			frame.pack();
+	    			frame.setVisible(true);
+	    			
+	    			
+	    		} else {
+	    			frame.dispose();
+	    			frame = new JFrame("Bunk Optimization");
+	    		    frame.setLayout(new GridLayout(1, 3, 10, 10));
+	    		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    			frame.add(sectionLabel);
+		    		frame.add(sectionField);
+		    		frame.add(sectionEnterButton);
+		    		sectionField.setEnabled(true);
+		    		sectionEnterButton.setEnabled(true);
+	    			frame.pack();
+	    			frame.setVisible(true);
+	    			textFields.clear();
+	    		}
 	    	}
 	    });
 	    
 	    //Init sections
-	    JButton sectionEnterButton = new JButton("Enter");
 	    sectionEnterButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 	    		
 	    		sectionEnterButton.setEnabled(false);
 	    		sectionField.setEnabled(false);
 	    		int numSections = Integer.parseInt(sectionField.getText());
-	    		
-	    		ArrayList<JTextField> textFields = new ArrayList<JTextField>();
 	    		
 	    		frame.setLayout(new GridLayout(numSections * 2 + 1, 3, 10, 10));
 	    		for (int i = 1; i < numSections + 1; i++) {
@@ -104,14 +171,13 @@ public class Helpers {
 	    });
 	    
 	    //Init file
-	    JButton selectFileButton = new JButton("Select File");
 	    selectFileButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 	    		initFile();
 	    		frame.remove(selectFileButton);
-	    		frame.add(sectionLabel, 0);
-	    		frame.add(sectionField, 1);
-	    		frame.add(sectionEnterButton, 2);
+	    		frame.add(sectionLabel);
+	    		frame.add(sectionField);
+	    		frame.add(sectionEnterButton);
 	    		frame.pack();
 	    		Helpers.initCampers();
 	    	}
@@ -151,9 +217,7 @@ public class Helpers {
 		
 		try {
 			
-			//Minus 1 exists because file number is one more than index in array list
 			br = new BufferedReader(new FileReader(file));
-			//br = new BufferedReader(new FileReader(PrintFiles.files.get(fileNumber - 1).toString()));
 			
 			br.readLine();
 			

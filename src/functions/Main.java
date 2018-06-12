@@ -19,16 +19,13 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		Helpers.manageGUI();
+		Helpers.manageUserInput();
 		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void fileSelectedAction() {
-		
-		Helpers.initCampers();
-		Helpers.initSections();
-		Helpers.initLoops();
+	public static void userInputComplete() {
+
 		Helpers.setAllowedBunkConfigs();
 		
 		for (int j = 0; j < trials; j++) {
