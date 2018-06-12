@@ -7,7 +7,6 @@ import objects.Arrangement;
 /*
  * TODO List
  * Make runnable out of environment
- * Add choices for how much to run
  * Seed initial population by making bottoms from bottom allowed only and top from top allowed only
  * Find way to run program in user-friendly way
  */
@@ -20,7 +19,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		Helpers.initFile();
+		Helpers.manageGUI();
 		
 	}
 	

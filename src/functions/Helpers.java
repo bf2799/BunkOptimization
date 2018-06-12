@@ -1,6 +1,9 @@
 package functions;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -10,10 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import objects.Arrangement;
 import objects.Camper;
@@ -43,33 +50,94 @@ public class Helpers {
 	
 	private static File file;
 	
+	private static JFrame frame;
+	
+	private final static int INT_TEXT_FIELD_WIDTH = 3;
+	
+	public static void manageGUI() {
+		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+	    JDialog.setDefaultLookAndFeelDecorated(true);
+	    frame = new JFrame("Bunk Optimization");
+	    frame.setLayout(new GridLayout(1, 3, 10, 10));
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	    JLabel sectionLabel = new JLabel("Sections in Bunk");
+	    JTextField sectionField = new JTextField(INT_TEXT_FIELD_WIDTH);
+	    
+	    JButton bunkNumberEnterButton = new JButton("Enter");
+	    bunkNumberEnterButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent ae) {
+	    		
+	    	}
+	    });
+	    
+	    //Init sections
+	    JButton sectionEnterButton = new JButton("Enter");
+	    sectionEnterButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent ae) {
+	    		
+	    		sectionEnterButton.setEnabled(false);
+	    		sectionField.setEnabled(false);
+	    		int numSections = Integer.parseInt(sectionField.getText());
+	    		
+	    		ArrayList<JTextField> textFields = new ArrayList<JTextField>();
+	    		
+	    		frame.setLayout(new GridLayout(numSections * 2 + 1, 3, 10, 10));
+	    		for (int i = 1; i < numSections + 1; i++) {
+	    			
+	    			frame.add(new JLabel("Bottom bunks in section " + i));
+	    			textFields.add(new JTextField(INT_TEXT_FIELD_WIDTH));
+	    			frame.add(textFields.get(textFields.size() - 1));
+	    			frame.add(new JLabel(""));
+	    			frame.add(new JLabel("Top bunks in section " + i));
+	    			textFields.add(new JTextField(INT_TEXT_FIELD_WIDTH));
+	    			frame.add(textFields.get(textFields.size() - 1));
+	    			if (i != numSections) {
+	    				frame.add(new JLabel(""));
+	    			}
+	    		}
+	    		
+	    		frame.add(bunkNumberEnterButton);
+	    		frame.pack();
+	    	}
+	    });
+	    
+	    //Init file
+	    JButton selectFileButton = new JButton("Select File");
+	    selectFileButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent ae) {
+	    		initFile();
+	    		frame.remove(selectFileButton);
+	    		frame.add(sectionLabel, 0);
+	    		frame.add(sectionField, 1);
+	    		frame.add(sectionEnterButton, 2);
+	    		frame.pack();
+	    		Helpers.initCampers();
+	    	}
+	    });
+	    
+	    
+	    frame.add(selectFileButton, 0);
+	    frame.pack();
+	    frame.setVisible(true);
+		
+	}
+	
+	
 	/**
 	 * Gets file to read from
 	 * @throws IOException
 	 */
 	public static void initFile() {
 		
-		JFrame.setDefaultLookAndFeelDecorated(true);
-	    JDialog.setDefaultLookAndFeelDecorated(true);
-	    JFrame frame = new JFrame("JComboBox Test");
-	    frame.setLayout(new FlowLayout());
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    JButton button = new JButton("Select File");
-	    button.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent ae) {
-	    		JFileChooser fileChooser = new JFileChooser();
-	    		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-	    		int returnValue = fileChooser.showOpenDialog(null);
-	    		if (returnValue == JFileChooser.APPROVE_OPTION) {
-	    			file = fileChooser.getSelectedFile();
-	    		}
-	    		frame.dispose();
-	    		Main.fileSelectedAction();
-	    	}
-	    });
-	    frame.add(button);
-	    frame.pack();
-	    frame.setVisible(true);
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		int returnValue = fileChooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+		}
+		
 	}
 	
 	/**
@@ -137,6 +205,7 @@ public class Helpers {
 		
 		int totalBunksEntered = 0;
 		boolean bunkDifferenceAllowed = true;
+		
 		
 		while (totalBunksEntered != Camper.campers.size() || !bunkDifferenceAllowed) {
 			
