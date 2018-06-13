@@ -1,21 +1,34 @@
 package functions;
 
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 
 import objects.Arrangement;
 import objects.Camper;
@@ -41,25 +54,38 @@ public class Helpers {
 	
 	public static final String DELIMITER = ",";
 	
-	private static final Scanner reader = new Scanner(System.in);
-	
 	private static File file;
 	
-	private static JFrame frame;
+	public static JFrame frame;
+	public static JPanel timePanel;
+	public static CardLayout cardLayout;
+	public static JLabel timeRemainLabel;
+	public static JPanel mainPanel;
 	
 	private final static int INT_TEXT_FIELD_WIDTH = 3;
 	
 	public static void manageUserInput() {
 		
+		cardLayout = new CardLayout();
+		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);
 	    frame = new JFrame("Bunk Optimization");
-	    frame.setLayout(new GridLayout(1, 3, 10, 10));
+	    frame.setLayout(cardLayout);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	    mainPanel = new JPanel();
+	    mainPanel.setLayout(cardLayout);
+	    
+	    timePanel = new JPanel();
+	    timePanel.setLayout(new GridLayout(2, 1));
+	    
+	    JPanel inputPanel = new JPanel();
+	    inputPanel.setLayout(new GridLayout(1, 3, 10, 10));
 	    
 	    ArrayList<JTextField> textFields = new ArrayList<JTextField>();
 	    
-	    JButton selectFileButton = new JButton("Select File");
+	    JButton selectFileButton = new JButton("Select CSV File");
 	    JButton sectionEnterButton = new JButton("Enter");
 	    
 	    JLabel sectionLabel = new JLabel("Sections in Bunk");
@@ -71,18 +97,44 @@ public class Helpers {
 	    JLabel loopLabel4 = new JLabel("  More is better");
 	    JTextField loopField = new JTextField(INT_TEXT_FIELD_WIDTH);
 	    
+	    JLabel timeLabel = new JLabel("      Time Remaining: ");
+	    timeRemainLabel = new JLabel("        00:00:00");
+	    timeLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    timeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+	    timeRemainLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    timeRemainLabel.setFont(new Font("Arial", Font.BOLD, 24));
+	    
 	    //Init loops
 	    JButton loopEnterButton = new JButton("Enter");
 	    loopEnterButton.addActionListener(new ActionListener() {
+	    	
+	    	@Override
 	    	public void actionPerformed(ActionEvent ae) {
-	    		Main.loops = Integer.parseInt(loopField.getText());
-	    		Main.userInputComplete();
+	    		if (isInt(loopField.getText())) {
+		    		Main.loops = Integer.parseInt(loopField.getText());
+		    		cardLayout.next(Helpers.mainPanel);
+		    		frame.pack();
+		    		SwingWorker<Void, Void> runTrials = new SwingWorker<Void, Void>() {
+
+		    			@Override
+		    			protected Void doInBackground() throws Exception {
+		    				Main.userInputComplete();
+		    				return null;
+		    			}
+		    			
+		    		};
+		    		runTrials.execute();
+		    		
+	    		}
 	    	}
+	    	
 	    });
 	    
 	    //Init bunk numbers
 	    JButton bunkNumberEnterButton = new JButton("Enter");
 	    bunkNumberEnterButton.addActionListener(new ActionListener() {
+	    	
+	    	@Override
 	    	public void actionPerformed(ActionEvent ae) {
 	    		
 	    		//Ensures bottom is 1 or 0 more than top and that total entered is correct
@@ -90,101 +142,122 @@ public class Helpers {
 	    		boolean bunkDifferenceAllowed = true;
 	    		boolean botBunk = true;
 	    		int prev = 0;
+	    		
+	    		boolean allInts = true;
 	    		for (JTextField num : textFields) {
-	    			totalBunksEntered += Integer.parseInt(num.getText());
-	    			if (!botBunk) {
-	    				if (!(prev - Integer.parseInt(num.getText()) == 0 || prev - Integer.parseInt(num.getText()) == 1)) {
-	    					bunkDifferenceAllowed = false;
-	    				}
-	    			} else {
-	    				prev = Integer.parseInt(num.getText());
+	    			if(!isInt(num.getText())) {
+	    				allInts = false;
 	    			}
-	    			botBunk = !botBunk;
 	    		}
 	    		
-	    		//Enforces enter rules
-	    		if (totalBunksEntered == Camper.campers.size() && bunkDifferenceAllowed) {
-	    			
-	    			//Assign right numbers to each section
-	    			for (int i = 0; i < textFields.size(); i += 2) {
-						Section.sections.add(new Section(Integer.parseInt(textFields.get(i).getText()),
-								Integer.parseInt(textFields.get(i + 1).getText())));
-	    			}
-	    			
-	    			frame.dispose();
-	    			frame = new JFrame("Bunk Optimization");
-	    		    frame.setLayout(new GridLayout(6, 1, 10, 10));
-	    		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    			frame.add(loopLabel1);
-	    			frame.add(loopLabel2);
-	    			frame.add(loopLabel3);
-	    			frame.add(loopLabel4);
-	    			frame.add(loopField);
-	    			frame.add(loopEnterButton);
-	    			frame.pack();
-	    			frame.setVisible(true);
-	    			
-	    			
-	    		} else {
-	    			frame.dispose();
-	    			frame = new JFrame("Bunk Optimization");
-	    		    frame.setLayout(new GridLayout(1, 3, 10, 10));
-	    		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    			frame.add(sectionLabel);
-		    		frame.add(sectionField);
-		    		frame.add(sectionEnterButton);
-		    		sectionField.setEnabled(true);
-		    		sectionEnterButton.setEnabled(true);
-	    			frame.pack();
-	    			frame.setVisible(true);
-	    			textFields.clear();
+	    		if (allInts) {
+		    		for (JTextField num : textFields) {
+		    			totalBunksEntered += Integer.parseInt(num.getText());
+		    			if (!botBunk) {
+		    				if (!(prev - Integer.parseInt(num.getText()) == 0 || prev - Integer.parseInt(num.getText()) == 1)) {
+		    					bunkDifferenceAllowed = false;
+		    				}
+		    			} else {
+		    				prev = Integer.parseInt(num.getText());
+		    			}
+		    			botBunk = !botBunk;
+		    		}
+		    		
+		    		//Enforces enter rules
+		    		if (totalBunksEntered == Camper.campers.size() && bunkDifferenceAllowed) {
+		    			
+		    			//Assign right numbers to each section
+		    			for (int i = 0; i < textFields.size(); i += 2) {
+							Section.sections.add(new Section(Integer.parseInt(textFields.get(i).getText()),
+									Integer.parseInt(textFields.get(i + 1).getText())));
+		    			}
+		    			
+		    			inputPanel.removeAll();
+		    		    inputPanel.setLayout(new GridLayout(6, 1, 10, 10));
+		    			inputPanel.add(loopLabel1);
+		    			inputPanel.add(loopLabel2);
+		    			inputPanel.add(loopLabel3);
+		    			inputPanel.add(loopLabel4);
+		    			inputPanel.add(loopField);
+		    			inputPanel.add(loopEnterButton);
+		    			frame.pack();
+		    			
+		    			
+		    		} else {
+		    			inputPanel.removeAll();
+		    		    inputPanel.setLayout(new GridLayout(1, 3, 10, 10));
+		    		    inputPanel.add(sectionLabel);
+		    			sectionField.setText("Invalid layout");
+		    			inputPanel.add(sectionField);
+		    			inputPanel.add(sectionEnterButton);
+			    		sectionField.setEnabled(true);
+			    		sectionEnterButton.setEnabled(true);
+			    		frame.pack();
+		    			textFields.clear();
+		    		}
 	    		}
 	    	}
 	    });
 	    
 	    //Init sections
 	    sectionEnterButton.addActionListener(new ActionListener() {
+	    	
+	    	@Override
 	    	public void actionPerformed(ActionEvent ae) {
 	    		
-	    		sectionEnterButton.setEnabled(false);
-	    		sectionField.setEnabled(false);
-	    		int numSections = Integer.parseInt(sectionField.getText());
+	    		if (isInt(sectionField.getText())) {
 	    		
-	    		frame.setLayout(new GridLayout(numSections * 2 + 1, 3, 10, 10));
-	    		for (int i = 1; i < numSections + 1; i++) {
-	    			
-	    			frame.add(new JLabel("Bottom bunks in section " + i));
-	    			textFields.add(new JTextField(INT_TEXT_FIELD_WIDTH));
-	    			frame.add(textFields.get(textFields.size() - 1));
-	    			frame.add(new JLabel(""));
-	    			frame.add(new JLabel("Top bunks in section " + i));
-	    			textFields.add(new JTextField(INT_TEXT_FIELD_WIDTH));
-	    			frame.add(textFields.get(textFields.size() - 1));
-	    			if (i != numSections) {
-	    				frame.add(new JLabel(""));
-	    			}
+		    		sectionEnterButton.setEnabled(false);
+		    		sectionField.setEnabled(false);
+		    		int numSections = Integer.parseInt(sectionField.getText());
+		    		
+		    		inputPanel.setLayout(new GridLayout(numSections * 2 + 1, 3, 10, 10));
+		    		for (int i = 1; i < numSections + 1; i++) {
+		    			
+		    			inputPanel.add(new JLabel("Bottom bunks in section " + i));
+		    			textFields.add(new JTextField(INT_TEXT_FIELD_WIDTH));
+		    			inputPanel.add(textFields.get(textFields.size() - 1));
+		    			inputPanel.add(new JLabel(""));
+		    			inputPanel.add(new JLabel("Top bunks in section " + i));
+		    			textFields.add(new JTextField(INT_TEXT_FIELD_WIDTH));
+		    			inputPanel.add(textFields.get(textFields.size() - 1));
+		    			if (i != numSections) {
+		    				inputPanel.add(new JLabel(""));
+		    			}
+		    		}
+		    		
+		    		inputPanel.add(bunkNumberEnterButton);
+		    		frame.pack();
 	    		}
-	    		
-	    		frame.add(bunkNumberEnterButton);
-	    		frame.pack();
 	    	}
 	    });
 	    
 	    //Init file
 	    selectFileButton.addActionListener(new ActionListener() {
+	    	
+	    	@Override
 	    	public void actionPerformed(ActionEvent ae) {
-	    		initFile();
-	    		frame.remove(selectFileButton);
-	    		frame.add(sectionLabel);
-	    		frame.add(sectionField);
-	    		frame.add(sectionEnterButton);
-	    		frame.pack();
-	    		Helpers.initCampers();
+	    		if (initFileAndValid()) {
+	    			inputPanel.remove(selectFileButton);
+	    			inputPanel.add(sectionLabel);
+	    			inputPanel.add(sectionField);
+	    			inputPanel.add(sectionEnterButton);
+		    		frame.pack();
+		    		Helpers.initCampers();
+	    		} else {
+	    			selectFileButton.setText("File must be .csv");
+	    			frame.pack();
+	    		}
 	    	}
 	    });
 	    
 	    
-	    frame.add(selectFileButton, 0);
+	    inputPanel.add(selectFileButton, 0);
+	    timePanel.add(timeLabel);
+	    timePanel.add(timeRemainLabel);
+	    mainPanel.add(inputPanel);
+	    mainPanel.add(timePanel);
+	    frame.add(mainPanel);
 	    frame.pack();
 	    frame.setVisible(true);
 		
@@ -195,14 +268,19 @@ public class Helpers {
 	 * Gets file to read from
 	 * @throws IOException
 	 */
-	public static void initFile() {
+	public static boolean initFileAndValid() {
 		
+		boolean valid = false;
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		int returnValue = fileChooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();
+			if(file.getName().contains(".csv")) {
+				valid = true;
+			}
 		}
+		return valid;
 		
 	}
 	
@@ -503,13 +581,13 @@ public class Helpers {
 	 * @param secs
 	 * 			The number of seconds to format
 	 */
-	public static void timeOutput(double secs) {
+	public static String timeOutput(double secs) {
 		
 		int formatSecs = (int) Math.round(secs);
 		int hoursRemaining = formatSecs / 3600;
 		int minutesRemaining = (formatSecs - 3600 * hoursRemaining) / 60;
 		formatSecs -= hoursRemaining * 3600 + minutesRemaining * 60;
-		System.out.println(hoursRemaining + ":" + minutesRemaining + ":" + formatSecs);
+		return (hoursRemaining + ":" + minutesRemaining + ":" + formatSecs);
 		
 	}
 
@@ -600,4 +678,27 @@ public class Helpers {
 		
 		
 	}
+
+	/**
+	 * Returns whether a string is an integer or not
+	 * @param string
+	 * 			The string to check
+	 * @return
+	 * 			Is an integer?
+	 */
+	public static boolean isInt(String string) {
+		boolean isInt = true;
+		for (int i = 0; i < string.length(); i++) {
+			if (!(string.substring(i, i + 1).equals("0") || string.substring(i, i + 1).equals("1")
+					|| string.substring(i, i + 1).equals("2") || string.substring(i, i + 1).equals("3")
+					|| string.substring(i, i + 1).equals("4") || string.substring(i, i + 1).equals("5")
+					|| string.substring(i, i + 1).equals("6") || string.substring(i, i + 1).equals("7")
+					|| string.substring(i, i + 1).equals("8") || string.substring(i, i + 1).equals("9"))) {
+				isInt = false;
+			}
+		}
+		
+		return isInt;
+	}
+	
 }

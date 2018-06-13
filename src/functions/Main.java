@@ -1,6 +1,13 @@
 package functions;
 
+import java.awt.FlowLayout;
 import java.util.ArrayList;
+
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
 import objects.Arrangement;
 
@@ -25,7 +32,7 @@ public class Main {
 	
 	@SuppressWarnings("unchecked")
 	public static void userInputComplete() {
-
+		
 		Helpers.setAllowedBunkConfigs();
 		
 		for (int j = 0; j < trials; j++) {
@@ -42,7 +49,8 @@ public class Main {
 					int secsRemaining = (int) Math.round((double) (GEN_PER_LOOP * loops) / (gensComplete + (i - 1) * GEN_PER_LOOP) * (System.currentTimeMillis() - startTime) / 1000.0 - (System.currentTimeMillis() - startTime) / 1000.0);
 					if (secsRemaining != prevSecsRemaining) {
 						if (trials == 1) {
-							Helpers.timeOutput(secsRemaining);
+							Helpers.timeRemainLabel.setText("         " + Helpers.timeOutput(secsRemaining));
+							Helpers.frame.pack();
 						}
 						prevSecsRemaining = secsRemaining;
 					}
