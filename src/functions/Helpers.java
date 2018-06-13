@@ -19,6 +19,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -78,7 +80,7 @@ public class Helpers {
 	    mainPanel.setLayout(cardLayout);
 	    
 	    timePanel = new JPanel();
-	    timePanel.setLayout(new GridLayout(2, 1));
+	    timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
 	    
 	    JPanel inputPanel = new JPanel();
 	    inputPanel.setLayout(new GridLayout(1, 3, 10, 10));
@@ -97,11 +99,9 @@ public class Helpers {
 	    JLabel loopLabel4 = new JLabel("  More is better");
 	    JTextField loopField = new JTextField(INT_TEXT_FIELD_WIDTH);
 	    
-	    JLabel timeLabel = new JLabel("      Time Remaining: ");
-	    timeRemainLabel = new JLabel("        00:00:00");
-	    timeLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    JLabel timeLabel = new JLabel("Time Remaining: ");
+	    timeRemainLabel = new JLabel("00:00:00");
 	    timeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    timeRemainLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
 	    timeRemainLabel.setFont(new Font("Arial", Font.BOLD, 24));
 	    
 	    //Init loops

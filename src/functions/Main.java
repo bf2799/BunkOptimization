@@ -49,7 +49,7 @@ public class Main {
 					int secsRemaining = (int) Math.round((double) (GEN_PER_LOOP * loops) / (gensComplete + (i - 1) * GEN_PER_LOOP) * (System.currentTimeMillis() - startTime) / 1000.0 - (System.currentTimeMillis() - startTime) / 1000.0);
 					if (secsRemaining != prevSecsRemaining) {
 						if (trials == 1) {
-							Helpers.timeRemainLabel.setText("         " + Helpers.timeOutput(secsRemaining));
+							Helpers.timeRemainLabel.setText(Helpers.timeOutput(secsRemaining));
 							Helpers.frame.pack();
 						}
 						prevSecsRemaining = secsRemaining;
