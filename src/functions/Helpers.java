@@ -2,6 +2,7 @@ package functions;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -94,7 +95,7 @@ public class Helpers {
 	    JTextField sectionField = new JTextField(INT_TEXT_FIELD_WIDTH);
 	    
 	    JLabel loopLabel1 = new JLabel("  Enter # of loops to run");
-	    JLabel loopLabel2 = new JLabel("  ~2 minutes each");
+	    JLabel loopLabel2 = new JLabel("  ~1-2 minutes each");
 	    JLabel loopLabel3 = new JLabel("  ~30 loops maximizes return on time");
 	    JLabel loopLabel4 = new JLabel("  More is better");
 	    JTextField loopField = new JTextField(INT_TEXT_FIELD_WIDTH);
@@ -103,6 +104,8 @@ public class Helpers {
 	    timeRemainLabel = new JLabel("00:00:00");
 	    timeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    timeRemainLabel.setFont(new Font("Arial", Font.BOLD, 24));
+	    timeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    timeRemainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    
 	    //Init loops
 	    JButton loopEnterButton = new JButton("Enter");
