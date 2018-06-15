@@ -292,8 +292,6 @@ public class Helpers {
 	 */
 	public static void initCampers() {
 		
-		boolean doneReading = false;
-		
 		BufferedReader br = null;
 		
 		try {
@@ -302,27 +300,35 @@ public class Helpers {
 			
 			br.readLine();
 			
-			while(!doneReading) {
+			String line = "";
+			
+			while((line = br.readLine()) != null) {
 				
-				String[] line = br.readLine().split(DELIMITER);
-				
-				if (line.length < 2) {
-					doneReading = true;
-				} else {
+				String[] lineSplit = line.split(DELIMITER);
 
-					boolean topBunkAllowed = false;
-					boolean botBunkAllowed = false;
-					
-					if (!line[2].equals("")) {
-						topBunkAllowed = true;
-					}
-					if (!line[3].equals("")) {
-						botBunkAllowed = true;
-					}
-					
-					Camper.campers.add(new Camper(line[0], topBunkAllowed, botBunkAllowed, line[4], line[5], line[6],
-							line[7], line[8], line[9]));
+				boolean topBunkAllowed = false;
+				boolean botBunkAllowed = false;
+				
+				if (!lineSplit[2].equals("")) {
+					topBunkAllowed = true;
 				}
+				if (!lineSplit[3].equals("")) {
+					botBunkAllowed = true;
+				}
+				
+				ArrayList<String> revLineSplit = new ArrayList<String>();
+				
+				for (int i = 0; i <= 9; i++) {
+					if (i >= lineSplit.length) {
+						revLineSplit.add("");
+					} else {
+						revLineSplit.add(lineSplit[i]);
+					}
+				}
+				
+				Camper.campers.add(new Camper(revLineSplit.get(0), topBunkAllowed, botBunkAllowed, revLineSplit.get(4),
+						revLineSplit.get(5), revLineSplit.get(6), revLineSplit.get(7), revLineSplit.get(8),
+						revLineSplit.get(9)));
 				
 			}
 			
