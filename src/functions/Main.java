@@ -4,12 +4,6 @@ import java.util.ArrayList;
 
 import objects.Arrangement;
 
-/*
- * TODO List
- * Make runnable out of environment
- * Seed initial population by making bottoms from bottom allowed only and top from top allowed only
- * Scrollable window
- */
 
 public class Main {
 
