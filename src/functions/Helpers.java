@@ -76,6 +76,13 @@ public class Helpers {
 	    timePanel = new JPanel();
 	    timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
 	    
+	    int maxBedsInSection = 0;
+		for (Section s : Section.sections) {
+			if (s.getNumBotBunks() > maxBedsInSection) {
+				maxBedsInSection = s.getNumBotBunks();
+			}
+		}
+	    
 	    JPanel inputPanel = new JPanel();
 	    inputPanel.setLayout(new GridLayout(1, 3, 10, 10));
 	    
@@ -721,6 +728,7 @@ public class Helpers {
 					if (arrangementIndex[0] == 0) {
 						prevButton.setEnabled(false);
 					} else {
+						nextButton.setEnabled(true);
 						prevButton.setEnabled(true);
 					}
 					
@@ -737,7 +745,7 @@ public class Helpers {
 				
 				if (arrangementIndex[0] < highScoreArrangements.size() - 1) {
 					arrangementIndex[0]++;
-				
+					
 					//Setting all the top bunk / bottom bunk labels
 					int camperIndex = 0;
 					for (int s = 0; s < Section.sections.size(); s++) {
@@ -758,6 +766,7 @@ public class Helpers {
 					if (arrangementIndex[0] == highScoreArrangements.size() - 1) {
 						nextButton.setEnabled(false);
 					} else {
+						prevButton.setEnabled(true);
 						nextButton.setEnabled(true);
 					}
 				

@@ -62,7 +62,9 @@ public class Main {
 			}
 			
 			Helpers.highScore = 0;
-			Helpers.highScoreArrangements.clear();
+			if (trials != 1) {
+				Helpers.highScoreArrangements.clear();
+			}
 		}
 	}
 
