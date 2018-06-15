@@ -3,26 +3,17 @@ package functions;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -30,7 +21,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import objects.Arrangement;
@@ -48,6 +38,8 @@ public class Helpers {
 	public static double highScore = -Double.MAX_VALUE;
 	public static int fileNumber = 0;
 	
+	//public static DecimalFormat df = new DecimalFormat("#.#####");
+	
 	public static final int FORMAT_NAME_LENGTH = 25;
 	
 	public static final double BUNK_LEVEL_ADDITION = 10;
@@ -64,6 +56,7 @@ public class Helpers {
 	public static CardLayout cardLayout;
 	public static JLabel timeRemainLabel;
 	public static JPanel mainPanel;
+	public static JPanel outputPanel;
 	
 	private final static int INT_TEXT_FIELD_WIDTH = 3;
 	
@@ -276,7 +269,7 @@ public class Helpers {
 		boolean valid = false;
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		int returnValue = fileChooser.showOpenDialog(null);
+		int returnValue = fileChooser.showDialog(null, "Select");
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();
 			if(file.getName().contains(".csv")) {
@@ -637,48 +630,178 @@ public class Helpers {
 	 */
 	public static void printFormat(double secsTotal) {
 		
-		if (Main.trials == 1) {
-			for (int j = 0; j < highScoreArrangements.size(); j++) {
-				System.out.println();
-				System.out.println("Optimal Arrangement " + (j + 1));
-				System.out.println(calcPoints(highScoreArrangements.get(j)));
-				System.out.println();
+		int maxBedsInSection = 0;
+		for (Section s : Section.sections) {
+			if (s.getNumBotBunks() > maxBedsInSection) {
+				maxBedsInSection = s.getNumBotBunks();
+			}
+		}
+		
+		outputPanel = new JPanel();
+		outputPanel.setLayout(new GridLayout(3 * Section.sections.size() + 2, Math.max(maxBedsInSection, 4), 15, 15));
+		
+		JLabel optimArrangeNum = new JLabel("Optimal Arrangement 1");
+		JLabel optimArrangePts = new JLabel(Double.toString(calcPoints(highScoreArrangements.get(0))) + " pts");
+		
+		JLabel totalTimeLabel = new JLabel("Total Time:");
+		JLabel totalTime = new JLabel(timeOutput(secsTotal));
+		totalTimeLabel.setForeground(Color.RED);
+		totalTime.setForeground(Color.RED);
+		
+		//Section labels
+		JLabel[] sectionLabels = new JLabel[Section.sections.size()];
+		JLabel[][] topBunkLabels = new JLabel[Section.sections.size()][Math.max(maxBedsInSection, 4)];
+		JLabel[][] botBunkLabels = new JLabel[Section.sections.size()][Math.max(maxBedsInSection, 4)];
+
+		//Creating section, topBunk, and botBunk labels
+		for (int i = 0; i < Section.sections.size(); i++) {
+			sectionLabels[i] = new JLabel();
+			for (int j = 0; j < Math.max(maxBedsInSection, 4); j++) {
+				topBunkLabels[i][j] = new JLabel();
+				botBunkLabels[i][j] = new JLabel();
+			}
+		}
+		
+		JButton prevButton = new JButton("Previous");
+		JButton nextButton = new JButton("Next");
+		
+		int[] arrangementIndex = {0};
+		
+		//Disabling buttons to start
+		prevButton.setEnabled(false);
+		if (highScoreArrangements.size() == 1) {
+			nextButton.setEnabled(false);
+		}
+		
+		//Setting all the top bunk / bottom bunk labels (first time)
+		int camperIndex = 0;
+		for (int s = 0; s < Section.sections.size(); s++) {
+			
+			sectionLabels[s].setText("Section " + (s + 1));
+			sectionLabels[s].setForeground(Color.RED);
+			
+			for (int camper = 0; camper < Section.sections.get(s).getNumBotBunks(); camper++) {
+				String camperName = highScoreArrangements.get(arrangementIndex[0]).getCamper(camperIndex).getName();
+				botBunkLabels[s][camper].setText(camperName);
+				camperIndex++;
+			}
+			for (int camper = 0; camper < Section.sections.get(s).getNumTopBunks(); camper++) {
+				String camperName = highScoreArrangements.get(arrangementIndex[0]).getCamper(camperIndex).getName();
+				topBunkLabels[s][camper].setText(camperName);
+				camperIndex++;
+			}
+
+		}
+		
+		prevButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
 				
-				int camperIndex = 0;
-				for (Section s : Section.sections) {
-					String tempTopString = "";
-					String tempBotString = "";
-					for (int camper = 0; camper < s.getNumBotBunks(); camper++) {
-						String camperName = highScoreArrangements.get(j).getCamper(camperIndex).getName();
-						tempBotString += camperName;
-						for (int chars = camperName.length(); chars < FORMAT_NAME_LENGTH; chars++) {
-							tempBotString += " ";
+				if (arrangementIndex[0] > 0) {
+					arrangementIndex[0]--;
+					
+					//Setting all the top bunk / bottom bunk labels
+					int camperIndex = 0;
+					for (int s = 0; s < Section.sections.size(); s++) {
+						for (int camper = 0; camper < Section.sections.get(s).getNumBotBunks(); camper++) {
+							String camperName = highScoreArrangements.get(arrangementIndex[0]).getCamper(camperIndex).getName();
+							botBunkLabels[s][camper].setText(camperName);
+							camperIndex++;
 						}
-						camperIndex++;
-					}
-					for (int camper = 0; camper < s.getNumTopBunks(); camper++) {
-						String camperName = highScoreArrangements.get(j).getCamper(camperIndex).getName();
-						tempTopString += camperName;
-						for (int chars = camperName.length(); chars < FORMAT_NAME_LENGTH; chars++) {
-							tempTopString += " ";
+						for (int camper = 0; camper < Section.sections.get(s).getNumTopBunks(); camper++) {
+							String camperName = highScoreArrangements.get(arrangementIndex[0]).getCamper(camperIndex).getName();
+							topBunkLabels[s][camper].setText(camperName);
+							camperIndex++;
 						}
-						camperIndex++;
 					}
-					System.out.println(tempTopString);
-					System.out.println(tempBotString);
-					System.out.println();
+					
+					optimArrangeNum.setText("Optimal Arrangement " + (arrangementIndex[0] + 1));
+					
+					if (arrangementIndex[0] == 0) {
+						prevButton.setEnabled(false);
+					} else {
+						prevButton.setEnabled(true);
+					}
+					
+					frame.pack();
+				}
+			}
+			
+		});
+		
+		nextButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (arrangementIndex[0] < highScoreArrangements.size() - 1) {
+					arrangementIndex[0]++;
+				
+					//Setting all the top bunk / bottom bunk labels
+					int camperIndex = 0;
+					for (int s = 0; s < Section.sections.size(); s++) {
+						for (int camper = 0; camper < Section.sections.get(s).getNumBotBunks(); camper++) {
+							String camperName = highScoreArrangements.get(arrangementIndex[0]).getCamper(camperIndex).getName();
+							botBunkLabels[s][camper].setText(camperName);
+							camperIndex++;
+						}
+						for (int camper = 0; camper < Section.sections.get(s).getNumTopBunks(); camper++) {
+							String camperName = highScoreArrangements.get(arrangementIndex[0]).getCamper(camperIndex).getName();
+							topBunkLabels[s][camper].setText(camperName);
+							camperIndex++;
+						}
+					}
+					
+					optimArrangeNum.setText("Optimal Arrangement " + (arrangementIndex[0] + 1));
+
+					if (arrangementIndex[0] == highScoreArrangements.size() - 1) {
+						nextButton.setEnabled(false);
+					} else {
+						nextButton.setEnabled(true);
+					}
+				
+					frame.pack();
 				}
 				
 			}
 			
-			System.out.println("Total Time");
-			timeOutput(secsTotal);
-			
-		} else {
-			System.out.println(calcPoints(highScoreArrangements.get(0)));
+		});
+		
+		//Adding top row to outputPanel
+		outputPanel.add(prevButton);
+		outputPanel.add(optimArrangeNum);
+		outputPanel.add(optimArrangePts);
+		outputPanel.add(nextButton);
+		for (int i = 4; i < Math.max(4, maxBedsInSection); i++) {
+			outputPanel.add(new JLabel());
 		}
 		
+		//Adding sections to outputPanel
+		for (int s = 0; s < Section.sections.size(); s++) {
+			outputPanel.add(sectionLabels[s]);
+			for (int i = 1; i < Math.max(4, maxBedsInSection); i++) {
+				outputPanel.add(new JLabel());
+			}
+			for (JLabel label : topBunkLabels[s]) {
+				outputPanel.add(label);
+			}
+			for (JLabel label : botBunkLabels[s]) {
+				outputPanel.add(label);
+			}
+		}
 		
+		//Adding time output to outputPanel
+		outputPanel.add(totalTimeLabel);
+		outputPanel.add(totalTime);
+		for (int i = 2; i < Math.max(4, maxBedsInSection); i++) {
+			outputPanel.add(new JLabel());
+		}
+		
+		outputPanel.setVisible(true);
+		mainPanel.add(outputPanel);
+		cardLayout.next(mainPanel);
+		frame.pack();
 		
 	}
 

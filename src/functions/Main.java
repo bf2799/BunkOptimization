@@ -1,13 +1,6 @@
 package functions;
 
-import java.awt.FlowLayout;
 import java.util.ArrayList;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
 
 import objects.Arrangement;
 
@@ -15,7 +8,7 @@ import objects.Arrangement;
  * TODO List
  * Make runnable out of environment
  * Seed initial population by making bottoms from bottom allowed only and top from top allowed only
- * Find way to run program in user-friendly way
+ * Format time so it's always 00:00:00 format
  */
 
 public class Main {
