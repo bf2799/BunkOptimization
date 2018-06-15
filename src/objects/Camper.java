@@ -6,6 +6,11 @@ public class Camper {
 
 	public static ArrayList<Camper> campers = new ArrayList<Camper>();
 	
+	//For seeding population purposes
+	public static ArrayList<Camper> topOnlyCampers = new ArrayList<Camper>();
+	public static ArrayList<Camper> botOnlyCampers = new ArrayList<Camper>();
+	public static ArrayList<Camper> noTopBotPrefCampers = new ArrayList<Camper>();
+	
 	private String name;
 	private boolean topBunkAllowed;
 	private boolean botBunkAllowed;

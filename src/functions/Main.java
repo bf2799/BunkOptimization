@@ -8,9 +8,7 @@ import objects.Arrangement;
  * TODO List
  * Make runnable out of environment
  * Seed initial population by making bottoms from bottom allowed only and top from top allowed only
- * Format time so it's always 00:00:00 format
  * Scrollable window
- * Make csv readable without extra 'x'
  */
 
 public class Main {

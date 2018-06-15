@@ -36,9 +36,6 @@ public class Helpers {
 	public static int botBunkOnlyThreshold = 0;
 	public static int topBunkOnlyThreshold = 0;
 	public static double highScore = -Double.MAX_VALUE;
-	public static int fileNumber = 0;
-	
-	//public static DecimalFormat df = new DecimalFormat("#.#####");
 	
 	public static final int FORMAT_NAME_LENGTH = 25;
 	
@@ -326,9 +323,20 @@ public class Helpers {
 					}
 				}
 				
-				Camper.campers.add(new Camper(revLineSplit.get(0), topBunkAllowed, botBunkAllowed, revLineSplit.get(4),
+				Camper thisCamper = new Camper(revLineSplit.get(0), topBunkAllowed, botBunkAllowed, revLineSplit.get(4),
 						revLineSplit.get(5), revLineSplit.get(6), revLineSplit.get(7), revLineSplit.get(8),
-						revLineSplit.get(9)));
+						revLineSplit.get(9));
+				
+				Camper.campers.add(thisCamper);
+				
+				if (topBunkAllowed && !botBunkAllowed) {
+					Camper.topOnlyCampers.add(thisCamper);
+				} 
+				else if (!topBunkAllowed && botBunkAllowed) {
+					Camper.botOnlyCampers.add(thisCamper);
+				} else {
+					Camper.noTopBotPrefCampers.add(thisCamper);
+				}
 				
 			}
 			
@@ -596,7 +604,32 @@ public class Helpers {
 		int hoursRemaining = formatSecs / 3600;
 		int minutesRemaining = (formatSecs - 3600 * hoursRemaining) / 60;
 		formatSecs -= hoursRemaining * 3600 + minutesRemaining * 60;
-		return (hoursRemaining + ":" + minutesRemaining + ":" + formatSecs);
+		
+		//Make hours have two digits
+		String hoursRemainingString;
+		if (hoursRemaining < 10) {
+			hoursRemainingString = "0" + hoursRemaining;
+		} else {
+			hoursRemainingString = Integer.toString(hoursRemaining);
+		}
+		
+		//Make minutes have two digits
+		String minutesRemainingString;
+		if (minutesRemaining < 10) {
+			minutesRemainingString = "0" + minutesRemaining;
+		} else {
+			minutesRemainingString = Integer.toString(minutesRemaining);
+		}
+		
+		//Make seconds have two digits
+		String secsRemainingString;
+		if (formatSecs < 10) {
+			secsRemainingString = "0" + formatSecs;
+		} else {
+			secsRemainingString = Integer.toString(formatSecs);
+		}
+		
+		return (hoursRemainingString + ":" + minutesRemainingString + ":" + secsRemainingString);
 		
 	}
 

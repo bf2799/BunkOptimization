@@ -5,6 +5,7 @@ import java.util.Random;
 
 import objects.Arrangement;
 import objects.Camper;
+import objects.Section;
 
 public class GeneticAlgorithms {
 
@@ -16,22 +17,99 @@ public class GeneticAlgorithms {
 	private static Random generator = new Random();
 	
 	
+	@SuppressWarnings("unchecked")
 	public static void initPopulation() {
 		
 		initPopulation.clear();
 		
 		while (initPopulation.size() < initPopulationSize) {
 			
-			//Generate random permutation
-			@SuppressWarnings("unchecked")
-			ArrayList<Camper> subArrangement = (ArrayList<Camper>) Camper.campers.clone();
 			ArrayList<Camper> tempArrangement = new ArrayList<Camper>();
 			
-			while (subArrangement.size() > 0) {
-				int index = generator.nextInt(subArrangement.size());
+			int totBotBunks = 0;
+			for (Section s : Section.sections) {
+				totBotBunks += s.getNumBotBunks();
+			}
 			
-				tempArrangement.add(subArrangement.get(index));
-				subArrangement.remove(index);
+			ArrayList<Camper> subBotCampers = new ArrayList<Camper>();
+			ArrayList<Camper> subTopCampers = new ArrayList<Camper>();
+			
+			ArrayList<Camper> newBotCampers = new ArrayList<Camper>();
+			ArrayList<Camper> newTopCampers = new ArrayList<Camper>();
+			
+			//Create the initial pre-shuffled lists of bottom and top campers
+			
+			//Add bottom only campers
+			int campersAdded = 0;
+			ArrayList<Camper> subBotOnlyCampers = (ArrayList<Camper>) Camper.botOnlyCampers.clone();
+			while (subBotCampers.size() < totBotBunks && campersAdded < Camper.botOnlyCampers.size()) {
+				int index = generator.nextInt(subBotOnlyCampers.size());
+				
+				subBotCampers.add(subBotOnlyCampers.get(index));
+				subBotOnlyCampers.remove(index);
+				campersAdded += 1;
+			}
+			
+			//If room, add random no-preference campers
+			campersAdded = 0;
+			ArrayList<Camper> subNoPrefCampers = (ArrayList<Camper>) Camper.noTopBotPrefCampers.clone();
+			while (subBotCampers.size() < totBotBunks && campersAdded < Camper.noTopBotPrefCampers.size()) {
+				int index = generator.nextInt(subNoPrefCampers.size());
+				
+				subBotCampers.add(subNoPrefCampers.get(index));
+				subNoPrefCampers.remove(index);
+				campersAdded += 1;
+			}
+			
+			//If room, add top-only campers
+			campersAdded = 0;
+			ArrayList<Camper> subTopOnlyCampers = (ArrayList<Camper>) Camper.topOnlyCampers.clone();
+			while (subBotCampers.size() < totBotBunks && campersAdded < Camper.topOnlyCampers.size()) {
+				int index = generator.nextInt(subTopOnlyCampers.size());
+				
+				subBotCampers.add(subTopOnlyCampers.get(index));
+				subTopOnlyCampers.remove(index);
+				campersAdded += 1;
+			}
+			
+			//Add the remaining to the top
+			for (Camper c : subBotOnlyCampers) {
+				subTopCampers.add(c);
+			}
+			for (Camper c : subNoPrefCampers) {
+				subTopCampers.add(c);
+			}
+			for (Camper c : subTopOnlyCampers) {
+				subTopCampers.add(c);
+			}
+			
+			//Create the random bottom and top orders
+			while(subBotCampers.size() > 0) {
+				int index = generator.nextInt(subBotCampers.size());
+				
+				newBotCampers.add(subBotCampers.get(index));
+				subBotCampers.remove(index);
+			}
+			while(subTopCampers.size() > 0) {
+				int index = generator.nextInt(subTopCampers.size());
+				
+				newTopCampers.add(subTopCampers.get(index));
+				subTopCampers.remove(index);
+			}
+			
+			for (Section s : Section.sections) {
+				for (int i = 0; i < s.getNumBotBunks(); i++) {
+					int index = generator.nextInt(newBotCampers.size());
+					
+					tempArrangement.add(newBotCampers.get(index));
+					newBotCampers.remove(index);
+				}
+				for (int i = 0; i < s.getNumTopBunks(); i++) {
+					int index = generator.nextInt(newTopCampers.size());
+					
+					tempArrangement.add(newTopCampers.get(index));
+					newTopCampers.remove(index);
+				}
 			}
 			
 			initPopulation.add(new Arrangement(tempArrangement));
