@@ -43,6 +43,7 @@ public class Helpers {
 	public static final double BUNK_BUDDY_ADDITION = 1;
 	public static final double SIDE_ADDITION = 1;
 	public static final double DIAGONAL_ADDITION = 0.5;
+	public static final double TOP_ADDITION = 0.5;
 	
 	public static final String DELIMITER = ",";
 	
@@ -495,10 +496,16 @@ public class Helpers {
 					camperPoints += BUNK_LEVEL_ADDITION;
 				}
 				
-				//Add points for bunk buddy
+				//Add points for bunk buddy as bunk buddy
 				if ((Section.sections.get(l).getNumTopBunks() > m) && Section.sections.get(l).getBotBunk(m)
 						.bunkMatePrefMatches(Section.sections.get(l).getTopBunk(m).getName())) {
 					camperPoints += BUNK_BUDDY_ADDITION;
+				}
+				
+				//Add points for bunk buddy as near
+				if ((Section.sections.get(l).getNumTopBunks() > m) && Section.sections.get(l).getBotBunk(m)
+						.nearPrefMatches(Section.sections.get(l).getTopBunk(m).getName())) {
+					camperPoints += TOP_ADDITION;
 				}
 				
 				//Add points for side near preferences
@@ -534,10 +541,16 @@ public class Helpers {
 					camperPoints += BUNK_LEVEL_ADDITION;
 				}
 				
-				//Add points for bunk buddy
+				//Add points for bunk buddy as bunk buddy
 				if ((Section.sections.get(l).getNumBotBunks() > n) && Section.sections.get(l).getTopBunk(n)
 						.bunkMatePrefMatches(Section.sections.get(l).getBotBunk(n).getName())) {
 					camperPoints += BUNK_BUDDY_ADDITION;
+				}
+				
+				//Add points for bunk buddy as near
+				if ((Section.sections.get(l).getNumBotBunks() > n) && Section.sections.get(l).getTopBunk(n)
+						.nearPrefMatches(Section.sections.get(l).getBotBunk(n).getName())) {
+					camperPoints += TOP_ADDITION;
 				}
 				
 				//Add points for side near preferences
