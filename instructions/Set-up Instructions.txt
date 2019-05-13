@@ -1,0 +1,10 @@
+Bunk Optimization Set-up Instructions
+
+1. Download latest Java platform: https://www.oracle.com/technetwork/java/javase/downloads/index.html
+	The installer will give instructions.
+2. Create a new spreadsheet or create a copy of TemplateCSV. 
+	In exact format of the template, enter in desired data.
+	Save the spreadsheet/template copy as a .csv in a memorable spot.
+3. (Optional) Create a desktop shortcut of BunkOptimization.exe.
+	This will make it easy to find the application in the future.
+4. Run BunkOptimization.exe.

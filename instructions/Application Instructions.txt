@@ -1,0 +1,23 @@
+Application Instructions
+
+1. Select file:
+	Browse through your files and select a .csv file you have entered data into
+2. Sections in bunk:
+	A section is defined as a continuous stretch of bunks.
+	How many continuous stretches are in the bunk you are attempting to fill?
+3. Bunks in each section:
+	Enter the number of top and bottom bunks in each section of the bunk.
+	The section numbers are as you define them.
+4. Loops:
+	This is the number of times the program runs.
+	A higher number gives a better result, to a certain extent.
+	30 loops is considered a good result, but more is better if possible.
+	The time for each loop is usually 1-2 minutes, but allow for up to 3 for large bunks/slow devices.
+5. Time Remaining:
+	The program is running, and you will get an output at the end.
+6. Display:
+	The bunk sections will be displayed separately.
+	Top bunks are on top, and bottom bunks are on bottom.
+	Occasionally, there will be multiple, equally satisfactory layouts.
+	To switch between them, use the previous and next buttons.
+	However, there is usually one arrangement.
