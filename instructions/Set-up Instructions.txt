@@ -4,6 +4,9 @@ Bunk Optimization Set-up Instructions
 	The installer will give instructions.
 2. Create a new spreadsheet or create a copy of TemplateCSV. 
 	In exact format of the template, enter in desired data.
+	"x" for Top/Bottom Bunk Allowed indicates that level is allowed.
+	All other lines should be filled out with names or grade. 
+	The preferences can be left blank if wanted.
 	Save the spreadsheet/template copy as a .csv in a memorable spot.
 3. (Optional) Create a desktop shortcut of BunkOptimization.exe.
 	This will make it easy to find the application in the future.
