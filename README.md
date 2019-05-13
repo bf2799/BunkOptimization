@@ -1,5 +1,5 @@
 # BunkOptimization
-Bunk Optimization creates optimal bed arrangements in bunk/cabin for camps. It uses neighbor and bunk preferences of campers in evolutionary algorithm to estimate optimal solution. A GUI for specifying the bunk layout, seeing remaining time, and viewing the layout solution is included.
+Bunk Optimization creates optimal bed arrangements in bunks/cabins for camps. It uses neighbor and bunk preferences of campers in evolutionary algorithm to estimate optimal solution. A GUI for specifying the bunk layout, seeing remaining time, and viewing the layout solution is included.
 
 ## User Instructions
 After cloning/downloading repository or source code, follow "Set-up Instructions" then "Application Instructions." The user steps are summarized below.  
