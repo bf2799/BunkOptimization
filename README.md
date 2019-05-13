@@ -30,10 +30,6 @@ After cloning/downloading repository or source code, follow "Set-up Instructions
 	d. To switch between them, use the previous and next buttons.  
 	e. However, there is usually one arrangement.  
 
-## CSV Order
-    Name Grade TopBunkAllowed BotBunkAllowed BunkmatePref1 BunkmatePref2 BunkmatePref3 NearPref1 NearPref2 NearPref3
-
-
 ## Important Methods: Descriptions
 ### Init Campers
 From csv file, creates new **Camper** objects with properties: **name**, **grade**, **topBunkAllowed**, **botBunkAllowed**, 3 **bunkMatePref**, 3 **nearPref**
